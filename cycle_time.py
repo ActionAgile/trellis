@@ -1,22 +1,30 @@
+from optparse import OptionParser
+
 import requests
 import grequests
+
 import numpy as np
 from dateutil.parser import parse
 
-list_id = "52f2905117e567e02021b8b8"
-app_key = "d55e4d19715539f767d6aead66698b02"
-app_token = "883856e4130c37c1c49f4ffece87b4c60277330166642db73e46dd334adf4487"
-list_url = "https://api.trello.com/1/lists/{}?fields=name&cards=open&card_fields=name&key={}&token={}"
-action_url = "https://api.trello.com/1/cards/{}/actions?filter=updateCard:idList&fields=date&member_fields=initials&key={}&token={}"
+import settings
+
+
+def print_lists_in_board(board_id):
+    u = settings.BOARD_URL.format(board_id, settings.APP_KEY,
+                                  settings.APP_TOKEN)
+    lists = requests.get(u).json()
+    for li in lists:
+        print "{} - {}".format(li.get('name'), li.get("id"))
 
 
 def get_list_data(list_id):
-    u = list_url.format(list_id, app_key, app_token)
+    u = settings.LIST_URL.format(list_id, settings.APP_KEY, settings.APP_TOKEN)
     return requests.get(u).json()
 
 
 def get_history_for_cards(cards):
-    urls = [action_url.format(card.get('id'), app_key, app_token)
+    urls = [settings.ACTION_URL.format(card.get('id'), settings.APP_KEY,
+                                       settings.APP_TOKEN)
             for card in cards]
     rs = (grequests.get(u) for u in urls)
     return grequests.map(rs)
@@ -28,13 +36,32 @@ def get_cycle_time(card_history, units='days'):
     return getattr((date_objects[-1] - date_objects[0]), units)
 
 
-def main():
-    cards = get_list_data(list_id)
+def print_cycle_time(cards):
     card_histories = get_history_for_cards(cards.get('cards'))
     cycle_time = np.mean([get_cycle_time(card_history) for card_history in
-                          card_histories])
+                  card_histories])
     print "Cycle time is {} {}".format(cycle_time, 'days')
 
 
+def main():
+    if options.board:
+        print print_lists_in_board(options.board)
+        exit()
+
+    if "," in options.list:
+        for li in options.list.split(","):
+            cards = get_list_data(li)
+            print_cycle_time(cards)
+    else:
+        cards = get_list_data(options.list)
+        print_cycle_time(cards)
+
+
 if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option('-b', '--board',
+                      help="The board ID to use")
+    parser.add_option('-l', '--list',
+                      help="The list ID to use (or comma separated list)")
+    (options, args) = parser.parse_args()
     main()
