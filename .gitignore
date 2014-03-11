@@ -1,0 +1,7 @@
+bower_modules/
+node_modules/
+bin/
+.env
+conf/
+*.tar
+*.swp
