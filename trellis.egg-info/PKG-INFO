@@ -1,0 +1,20 @@
+Metadata-Version: 1.1
+Name: trellis
+Version: 0.7
+Summary: Trello stats for winners.
+Home-page: https://github.com/actionagile/trellis
+Author: Ben Hughes
+Author-email: bwghughes@gmail.com
+License: BSD
+Description: 
+        
+        
+Keywords: trello,cycle_time
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7

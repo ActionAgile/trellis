@@ -1,0 +1,3 @@
+[console_scripts]
+trellis = cycle_time:runner
+

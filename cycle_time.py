@@ -20,6 +20,10 @@ def print_lists_in_board(board_id):
         print "{} - {}".format(li.get('name'), li.get("id"))
 
 
+def count_cards_not_done_on_board(board_id, done_list_id):
+    pass
+
+
 def get_list_data(list_id):
     u = settings.LIST_URL.format(list_id, settings.APP_KEY, settings.APP_TOKEN)
     return requests.get(u).json()
@@ -43,10 +47,10 @@ def print_cycle_time(cards):
     card_histories = get_history_for_cards(cards.get('cards'))
     cycle_time = np.mean([get_cycle_time(card_history) for card_history in
                   card_histories])
-    print "Cycle time is {} {}".format(cycle_time, 'days')
+    print cycle_time
 
 
-def main():
+def main(options):
     if options.board:
         print print_lists_in_board(options.board)
         exit()
@@ -55,7 +59,7 @@ def main():
         for li in options.list.split(","):
             cards = get_list_data(li)
             print_cycle_time(cards)
-    elif options.key:
+    elif options.token:
         t = trello.TrelloApi(settings.APP_KEY)
         webbrowser.open(t.get_token_url('cycle_time', expires='30days', write_access=False))
         exit()
@@ -64,7 +68,7 @@ def main():
         print_cycle_time(cards)
 
 
-if __name__ == '__main__':
+def runner():
     parser = OptionParser()
     parser.add_option('-b', '--board',
                       help="The board ID to use")
@@ -72,7 +76,7 @@ if __name__ == '__main__':
                       help="The list ID to use (or comma separated list)")
     parser.add_option('-a', '--all',
                       help="Get a list of all boards.")
-    parser.add_option('-k', '--key',
-                      help="Application key (overrides one in settings.py)")
+    parser.add_option('-t', '--token',
+                      help="New application token (overrides one in settings.py)")
     (options, args) = parser.parse_args()
-    main()
+    main(options)
