@@ -63,5 +63,9 @@ if __name__ == '__main__':
                       help="The board ID to use")
     parser.add_option('-l', '--list',
                       help="The list ID to use (or comma separated list)")
+    parser.add_option('-a', '--all',
+                      help="Get a list of all boards.")
+    parser.add_option('-k', '--key',
+                      help="Application key (overrides one in settings.py)")
     (options, args) = parser.parse_args()
     main()
