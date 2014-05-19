@@ -6,7 +6,10 @@ import grequests
 import numpy as np
 from dateutil.parser import parse
 
+import trello
+
 import settings
+import webbrowser
 
 
 def print_lists_in_board(board_id):
@@ -48,10 +51,14 @@ def main():
         print print_lists_in_board(options.board)
         exit()
 
-    if "," in options.list:
+    elif options.list and "," in options.list:
         for li in options.list.split(","):
             cards = get_list_data(li)
             print_cycle_time(cards)
+    elif options.key:
+        t = trello.TrelloApi(settings.APP_KEY)
+        webbrowser.open(t.get_token_url('cycle_time', expires='30days', write_access=False))
+        exit()
     else:
         cards = get_list_data(options.list)
         print_cycle_time(cards)
