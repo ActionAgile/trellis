@@ -6,3 +6,6 @@ conf/
 *.tar
 *.swp
 *.pyc
+*.db
+*.json
+*.csv
