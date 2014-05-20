@@ -11,6 +11,8 @@ import trello
 import settings
 import webbrowser
 
+import models
+
 
 def print_lists_in_board(board_id):
     u = settings.BOARD_URL.format(board_id, settings.APP_KEY,
@@ -43,14 +45,46 @@ def get_cycle_time(card_history, units='days'):
     return getattr((date_objects[-1] - date_objects[0]), units)
 
 
-def print_cycle_time(cards):
+def cycle_time(cards):
     card_histories = get_history_for_cards(cards.get('cards'))
     cycle_time = np.mean([get_cycle_time(card_history) for card_history in
                   card_histories])
-    print cycle_time
+    return cycle_time
+
+def panic_csv(options):
+    import csv
+    with open(options.outputfile, 'wb') as csvfile:
+        w = csv.writer(csvfile)
+        w.writerow([options.title, 'Cycle Time'])
+        for ctr in models.CycleTime.select().where(models.CycleTime.list_id == options.list):
+            w.writerow(ctr.to_csv().split(','))
+
+def panic_json(options):
+    import json
+    data = []
+    for ctr in models.CycleTime.select().where(models.CycleTime.list_id == options.list):
+        data.append({"title": ctr.when.strftime('%d/%m/%y'), 'value':ctr.cycle_time})
+
+
+    d = {"graph": {
+                "title": options.title,
+                "type": "line",
+                "color": "orange",
+                "refreshEveryNSeconds" : 120,
+                "datasequences": [
+                    { "title": options.title,
+                      "datapoints": data,
+                    }
+                ]
+            }
+        }
+    with open(options.outputfile, 'wb') as json_file:
+        json_file.write(json.dumps(d, indent=4, sort_keys=True))
 
 
 def main(options):
+    models.CycleTime.create_table(fail_silently=True)
+
     if options.board:
         print print_lists_in_board(options.board)
         exit()
@@ -65,7 +99,12 @@ def main(options):
         exit()
     else:
         cards = get_list_data(options.list)
-        print_cycle_time(cards)
+        ct = cycle_time(cards)
+        print ct
+        if options.save:
+            models.CycleTime.create(list_id=options.list, cycle_time=ct)
+        if options.outputfile:
+            panic_json(options)
 
 
 def runner():
@@ -78,5 +117,8 @@ def runner():
                       help="Get a list of all boards.")
     parser.add_option('-t', '--token',
                       help="New application token (overrides one in settings.py)")
+    parser.add_option('-s', '--save', default=True, action='store_true')
+    parser.add_option('-o', '--outputfile', default="cycletime.csv")
+    parser.add_option('--title', default='Cycle Time')
     (options, args) = parser.parse_args()
     main(options)

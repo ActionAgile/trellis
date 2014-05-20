@@ -5,3 +5,4 @@ bin/
 conf/
 *.tar
 *.swp
+*.pyc

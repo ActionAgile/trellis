@@ -4,9 +4,12 @@ gevent==1.0.1
 greenlet==0.4.2
 grequests==0.2.0
 numpy==1.8.1
+peewee==2.2.4
 python-dateutil==2.2
 requests==2.3.0
 six==1.6.1
+-e git+git@github.com:actionagile/trellis.git@782372e3389d45be1491c6ed38e199a6853081c2#egg=trellis-master
+trello==0.9.1
 urllib3==1.8.2
 wheel==0.23.0
 wsgiref==0.1.2
