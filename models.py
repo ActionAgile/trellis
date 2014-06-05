@@ -1,13 +1,12 @@
 from datetime import datetime
-from peewee import *
+from peewee import CharField, DateTimeField, FloatField, SqliteDatabase
 
-db = SqliteDatabase('cycletimes.db')
+db = SqliteDatabase('snapshots.db')
 
 
-class CycleTime(Model):
-    list_id = CharField()
-    when = DateTimeField()
+class Snapshot(db.Model):
+    board_id = CharField()
+    when = DateTimeField(default=datetime.now)
     cycle_time = FloatField()
-
-    def to_csv(self):
-        return "{}, {}".format(self.when.strftime('%d/%m/%y'), self.cycle_time)
+    revenue = FloatField()
+    spend = FloatField()

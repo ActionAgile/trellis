@@ -1,15 +1,20 @@
+MarkupSafe==0.21
+Werkzeug==0.9.4
 curdling==0.4.0
 distlib==0.1.2
-gevent==1.0.1
+gevent==1.0
 greenlet==0.4.2
 grequests==0.2.0
-numpy==1.8.1
+mock==1.0.1
+numpy==1.8.0
 peewee==2.2.4
+py==1.4.20
+pytest==2.5.2
 python-dateutil==2.2
-requests==2.3.0
-six==1.6.1
--e git+git@github.com:actionagile/trellis.git@782372e3389d45be1491c6ed38e199a6853081c2#egg=trellis-master
-trello==0.9.1
+requests==2.2.1
+six==1.5.2
+sure==1.2.7
 urllib3==1.8.2
 wheel==0.23.0
 wsgiref==0.1.2
+click==1.1

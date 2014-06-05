@@ -21,7 +21,7 @@ history = open('HISTORY.md').read().replace('.. :changelog:', '')
 
 setup(
     name='trellis',
-    version=0.7,
+    version=0.1,
     description='Trello stats for winners.',
     long_description=readme + '\n\n' + history,
     author='Ben Hughes',
@@ -43,7 +43,7 @@ setup(
     ],
     entry_points={
         'console_scripts':
-            ['trellis=cycle_time:runner']
+            ['trellis=cli:cli']
     }
 
 )

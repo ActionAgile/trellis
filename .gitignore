@@ -9,3 +9,7 @@ conf/
 *.db
 *.json
 *.csv
+*.egg-info
+htmlcov
+coverage.xml
+trellis.egg-info/*
