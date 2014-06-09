@@ -1,6 +1,12 @@
 # Config file for automatic testing at travis-ci.org
 language: python
 
+virtualenv:
+  system_site_packages: true
+
+before_install:
+ - sudo apt-get install -qq python-numpy
+
 python:
 #  - "3.3"
   - "2.7"
