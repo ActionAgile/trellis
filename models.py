@@ -1,12 +1,12 @@
 from datetime import datetime
-from peewee import CharField, DateTimeField, FloatField, SqliteDatabase
+from peewee import Model, CharField, DateTimeField, FloatField, SqliteDatabase
 
 db = SqliteDatabase('snapshots.db')
 
 
-class Snapshot(db.Model):
+class Snapshot(Model):
     board_id = CharField()
+    done_id = CharField()
     when = DateTimeField(default=datetime.now)
     cycle_time = FloatField()
-    revenue = FloatField()
-    spend = FloatField()
+

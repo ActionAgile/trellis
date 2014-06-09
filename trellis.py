@@ -14,17 +14,17 @@ class Trellis(object):
         around card history, so need to be able to make them in parallel.
     """
 
-    def __init__(self, app_key, app_token, board_id):
-        self.app_key = app_key
-        self.app_token = app_token
-        self.board_id = board_id
+    def __init__(self, trellis_context):
+        self.app_key = trellis_context.get('app_key')
+        self.app_token = trellis_context.get('app_token')
+        self.board_id = trellis_context.get('board_id')
 
     def get_lists(self):
         url = settings.BOARD_URL.format(self.board_id, self.app_key,
                                         self.app_token)
         return requests.get(url).json()
 
-    def _get_list_id_from_name(self, name):
+    def get_list_id_from_name(self, name):
         try:
             return [li.get('id') for li in self.get_lists()
                     if li.get('name') == name][0]

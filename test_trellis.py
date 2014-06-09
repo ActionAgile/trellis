@@ -6,13 +6,14 @@ import settings
 
 @pytest.fixture
 def trellis_obj():
-    return Trellis(Mock(), Mock(), Mock())
+    mock_context = dict(app_key=Mock(), app_token=Mock(), board_id=Mock())
+    return Trellis(mock_context)
 
 
 @patch('trellis.Trellis.get_lists')
 def test_get_list_id_from_name_works(mock_get_lists, trellis_obj):
     mock_get_lists.return_value = [{'id': 'eh23jnd2', 'name': 'Thang'}]
-    list_id = trellis_obj._get_list_id_from_name("Thang")
+    list_id = trellis_obj.get_list_id_from_name("Thang")
     assert list_id == 'eh23jnd2'
 
 
@@ -20,7 +21,7 @@ def test_get_list_id_from_name_works(mock_get_lists, trellis_obj):
 def test_get_list_id_from_name_is_none_with_nonexistent_name(mock_get_lists,
                                                              trellis_obj):
     mock_get_lists.return_value = [{'id': 'eh23jnd2', 'name': 'Thang'}]
-    list_id = trellis_obj._get_list_id_from_name("NotThang")
+    list_id = trellis_obj.get_list_id_from_name("NotThang")
     assert not list_id
 
 
