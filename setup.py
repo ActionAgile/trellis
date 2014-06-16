@@ -9,7 +9,8 @@ try:
 except ImportError:
     from distutils.core import setup
 
-requirements_lines = [line.strip() for line in open('requirements.txt').readlines()]
+requirements_lines = [line.strip() for line in open('requirements.txt')
+                      .readlines()]
 install_requires = list(filter(None, requirements_lines))
 
 if sys.argv[-1] == 'publish':
@@ -20,8 +21,8 @@ readme = open('README.md').read()
 history = open('HISTORY.md').read().replace('.. :changelog:', '')
 
 setup(
-    name='trello-stats',
-    version=0.2,
+    name='trellostats',
+    version=0.4,
     description='Trello stats for winners.',
     long_description=readme + '\n\n' + history,
     author='Ben Hughes',
@@ -41,7 +42,7 @@ setup(
     ],
     entry_points={
         'console_scripts':
-            ['trellis=cli:cli']
+        ['trellostats=cli:cli']
     }
 
 )

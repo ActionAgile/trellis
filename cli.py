@@ -2,7 +2,7 @@ import os
 import click
 
 from models import Snapshot
-from trellis import Trellis
+from trellostats import TrelloStats
 
 
 @click.group()
@@ -13,12 +13,12 @@ def cli(ctx):
 
         Requires the following environment varilables:
 
-        TRELLIS_APP_KEY=<your key here>
-        TRELLIS_APP_TOKEN=<your token here>
+        TRELLOSTATS_APP_KEY=<your key here>
+        TRELLOSTATS_APP_TOKEN=<your token here>
     """
     ctx.obj = dict()
-    ctx.obj['app_key'] = os.environ.get('TRELLIS_APP_KEY')
-    ctx.obj['app_token'] = os.environ.get('TRELLIS_APP_TOKEN')
+    ctx.obj['app_key'] = os.environ.get('TRELLOSTATS_APP_KEY')
+    ctx.obj['app_token'] = os.environ.get('TRELLOSTATS_APP_TOKEN')
 
 
 @click.command()
@@ -40,7 +40,7 @@ def resetdb(ctx):
                               to calc. Cycle Time', default="Done")
 def snapshot(ctx, board, cycle_time, done):
     ctx.obj['board_id'] = board
-    trellis = Trellis(ctx.obj)
+    ts = TrelloStats(ctx.obj)
     Snapshot.create_table(fail_silently=True)
     """
         Recording mode - Daily snapshots of a board for ongoing reporting:
@@ -52,36 +52,16 @@ def snapshot(ctx, board, cycle_time, done):
 
     """
     if cycle_time:
-        done_id = trellis.get_list_id_from_name(done)
-        cards = trellis.get_list_data(done_id)
-        ct = trellis.cycle_time(cards)
+        done_id = ts.get_list_id_from_name(done)
+        cards = ts.get_list_data(done_id)
+        ct = ts.cycle_time(cards)
+        print ct
 
         # Create snapshot
         Snapshot.create(board_id=board, done_id=done_id, cycle_time=ct)
 
 
-@click.command()
-@click.argument('board')
-@click.option('--cycle-time', is_flag=True,
-              help='Include cycle time in report')
-@click.option('--spend', is_flag=True, help='Include spend in report')
-@click.option('--revenue', is_flag=True, help='Include revenue in report')
-@click.option('--out', type=click.File, help='File to write report out to.')
-def report(board, cycle_time, spend, revenue, template, out):
-    """
-       Reporting mode: - Send templated reports with graphs, or output to json
-        -> trellis report --board=87hiudhw
-                          --cycle-time
-                          --spend="340,654"
-                          --revenue="456,435"
-                          --template=templates/client.html
-                          --out=report.html
-    """
-    pass
-
-
 cli.add_command(snapshot)
-cli.add_command(report)
 cli.add_command(resetdb)
 
 if __name__ == '__main__':
