@@ -1,6 +1,8 @@
 Trellis - Trello stats for Winners
 ==================================
 
+Build Status: ![Build Status](https://travis-ci.org/ActionAgile/trellis.svg?branch=master)
+
 Trello's cool, but it doesn't have any relevant reporting out of the box. That's what the API's are for.
 
 Trellis provides the following:
