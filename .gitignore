@@ -13,3 +13,5 @@ conf/
 htmlcov
 coverage.xml
 trellis.egg-info/
+
+*.gz
