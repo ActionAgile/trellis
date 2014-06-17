@@ -15,3 +15,7 @@ coverage.xml
 trellis.egg-info/
 
 *.gz
+
+.env
+
+.coverage
